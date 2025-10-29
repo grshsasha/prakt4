@@ -1,0 +1,218 @@
+/* ВИМОГИ: 2. Підібрані кастомні шрифти. */
+body {
+    font-family: 'Roboto Mono', monospace;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding-top: 20px;
+}
+
+/* Стилі для вимог */
+.header, .sub-header {
+    font-family: serif;
+    color: #333;
+    margin: 5px 0;
+    width: 950px; /* Ширина, щоб охопити всю клавіатуру */
+}
+.header { font-size: 28px; font-weight: 700; }
+.sub-header { font-size: 16px; margin-bottom: 10px; }
+.requirements {
+    font-family: serif;
+    color: #333;
+    width: 950px;
+    margin-bottom: 20px;
+}
+.requirements ol { padding-left: 20px; }
+
+/* Основний контейнер */
+.keyboard-container {
+    background-color: #c0c0c0;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+.keyboard-top { display: flex; justify-content: center; margin-bottom: 5px; }
+.cable-style {
+    display: block;
+    width: 150px;
+    height: 10px;
+    background: #808080;
+    border-radius: 0 0 5px 5px;
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.4);
+}
+
+/* 1. РОЗМІТКА GRID */
+.keyboard-layout {
+    /* Налаштування загального Grid для всієї клавіатури */
+    display: grid;
+    /* 25 колонок: 14 QWERTY + 2 Gap + 3 Nav/Arrow + 1 Gap + 4 Numpad + 1 Gap */
+    grid-template-columns: 
+        repeat(13, 45px)  /* QWERTY (1u) */
+        67px              /* Backspace/Enter-ISO (1.5u/2u) */
+        15px              /* Gap 1 (між QWERTY та NAV) */
+        repeat(3, 45px)   /* NAV/Arrows (1u) */
+        15px              /* Gap 2 (між NAV та NUMPAD) */
+        repeat(4, 45px);  /* NUMPAD (1u) */
+    
+    grid-auto-rows: 45px;
+    gap: 5px;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #888;
+    width: 980px; /* Вирівняно під загальну ширину */
+}
+
+/* -------------------- GRID AREAS -------------------- */
+/* F-ROW */
+.f-row { grid-column: 1 / span 14; grid-row: 1; display: flex; gap: 5px; }
+.nav-led-block-top { grid-column: 16 / span 3; grid-row: 1; display: flex; gap: 5px; }
+.led-block { grid-column: 20 / span 2; grid-row: 1; display: flex; align-items: center; gap: 5px; margin-left: 5px;}
+
+/* QWERTY BLOCK (Позиціонуємо як один блок, всередині Flex) */
+.qwerty-block { 
+    grid-column: 1 / span 14; 
+    grid-row: 2 / span 5; /* Займає 5 рядів (цифри до Alt) */
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+/* NAV BLOCK 2 (Ins/Del) */
+.nav-block-2 {
+    grid-column: 16 / span 3;
+    grid-row: 2; /* Ряд цифр */
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+}
+
+/* ARROW BLOCK */
+.arrow-block {
+    grid-column: 16 / span 3;
+    grid-row: 5 / span 2; /* Ряди Shift та Ctrl */
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 5px;
+    align-self: end; /* Притискає стрілки до низу */
+}
+.key-up-arrow { grid-column: 2; grid-row: 1; }
+.key-left-arrow { grid-column: 1; grid-row: 2; }
+.key-down-arrow { grid-column: 2; grid-row: 2; }
+.key-right-arrow { grid-column: 3; grid-row: 2; }
+
+/* NUMPAD BLOCK (Жорсткий Grid) */
+.numpad-block {
+    grid-column: 20 / span 4;
+    grid-row: 2 / span 5; /* Займає 5 рядів, як QWERTY */
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); 
+    grid-auto-rows: 45px; /* Вирівнюємо ряди по висоті 45px */
+    gap: 5px;
+}
+
+/* -------------------- СТИЛІ КЛАВІШ -------------------- */
+.key-row {
+    display: flex;
+    gap: 5px;
+    height: 45px;
+}
+.key {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2px 0;
+    border: none;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    color: #333;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    /* ВИМОГА 3: Додати тіні для стилізації клавіш. */
+    box-shadow: 0 3px 0 0 #b0b0b0, 0 0 5px rgba(0, 0, 0, 0.1) inset; 
+    transition: all 0.1s ease;
+    height: 100%;
+    text-align: center;
+    line-height: 1.1; 
+    flex-shrink: 0;
+}
+.small-text { font-size: 10px; }
+
+/* ВИМОГА 4: Кнопки мають різні стилі залежно від стану. */
+.mod-key, .tab-key, .caps-key, .enter-key-iso, .left-shift-key, .right-shift-key {
+    background-color: #ededed;
+    box-shadow: 0 4px 0 0 #a0a0a0, 0 0 5px rgba(0, 0, 0, 0.15) inset;
+}
+.key:active {
+    box-shadow: 0 0 0 0 #a0a0a0, 0 0 5px rgba(0, 0, 0, 0.3) inset;
+    transform: translateY(2px);
+}
+
+/* --- Розміри QWERTY/Mod (визначаються в Flex-контейнерах) --- */
+.key:not(.f-key, .media-key, .numpad-key, .nav-key, .arrow-key, .space-key) {
+    width: 45px; /* 1u */
+}
+.key.backspace-key { width: 67px; } /* 1.5u */
+.key.tab-key { width: 67px; } /* 1.5u */
+.key.caps-key { width: 90px; } /* 2u */
+
+/* Спеціальна обробка Enter-ISO (займає 2 ряди у QWERTY-Flex) */
+.key.enter-key-iso { 
+    width: 45px; /* Enter-ISO сам по собі 1u шириною в останньому ряді */
+    height: 95px; /* 2 ряди висоти */
+    align-self: flex-start;
+}
+.row-3 { 
+    position: relative; 
+    padding-right: 48px; /* Додаємо простір для Enter, який "заходить" у ряд 4 */
+}
+.key-plus-asterisk { margin-right: 48px; } /* Зсув клавіші +* */
+
+.key.left-shift-key { width: 55px; } /* 1.25u */
+.key.key-less-greater { width: 45px; } /* 1u */
+.key.right-shift-key { width: 112px; } /* 2.5u */
+
+.key.key-left-ctrl, .key.key-left-alt { width: 55px; } /* 1.25u */
+.key.key-win, .key.key-menu { width: 45px; } /* 1u */
+.key.key-altgr, .key.key-right-ctrl { width: 67px; } 
+.key.space-key {
+    width: 200px; /* Приблизно 4.5u */
+    flex-grow: 1;
+}
+
+/* --- Розміри F-Keys/Media --- */
+.f-key, .media-key, .nav-key, .arrow-key {
+    height: 45px; 
+    box-shadow: 0 2px 0 0 #c0c0c0, 0 0 3px rgba(0, 0, 0, 0.05) inset;
+    width: 45px; 
+}
+.f-key { width: 40px; }
+.f-key:nth-child(5), .f-key:nth-child(9) { margin-right: 15px; } 
+
+/* --- Розміри NUMPAD (Визначаються в Numpad-Grid) --- */
+.numpad-key { 
+    grid-column: span 1; 
+    grid-row: span 1; 
+    width: auto; /* дозволяємо Grid контролювати ширину */
+    height: auto;
+}
+.key-numpad-plus {
+    grid-row: 2 / span 2; 
+    grid-column: 4; 
+}
+.key-numpad-enter-v {
+    grid-row: 4 / span 2; 
+    grid-column: 4; 
+}
+.key-numpad-0 {
+    grid-column: span 2; 
+    grid-row: 5;
+}
